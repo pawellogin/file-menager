@@ -99,7 +99,6 @@ void open_file(vector<file>& file_list) {
 	cout << "2. edit data" << endl;
 	cout << "3. delete file" << endl;
 	cout << "4. return" << endl;
-
 	
 	cin >> choice;
 	
@@ -136,31 +135,7 @@ void load_files(const std::string& folderPath, std::vector<file>& file_list) {
 	system("cls");
 }
 
-void save_files(vector<file>& file_list) {
-	string diskPath;
-
-#ifdef _WIN32
-	const char* diskEnvVar = "USERPROFILE";
-#else
-	const char* diskEnvVar = "HOME";
-#endif
-
-	char diskPathBuffer[FILENAME_MAX];
-	size_t diskPathSize;
-
-	int result = getenv_s(&diskPathSize, diskPathBuffer, sizeof(diskPathBuffer), diskEnvVar);
-	if (result == 0) {
-		
-		diskPath = "C:";
-	}
-	else {
-		std::cout << "Failed to get the disk path." << std::endl;
-		return;
-	}
-
-	std::cout << "Disk Path: " << diskPath << std::endl;
-	
-	string folderPath = diskPath + "\\saved_files";
+void save_files(const std::string& folderPath, vector<file>& file_list) {
 
 	fs::create_directory(folderPath);
 
@@ -179,8 +154,23 @@ void save_files(vector<file>& file_list) {
 			Sleep(200);
 		}
 	}
-	Sleep(2000);
+	Sleep(500);
 	system("cls");
+}
+
+void changePaths(string& savePath, string& loadPath) {
+	cout << "current save path : " << savePath<<endl;
+	cout << "current load path : " << loadPath << endl;
+	cout << "1. change save path\n2. change load path\n3. return\n";
+
+	int choice = 0;
+	cin >> choice;
+
+	switch (choice) {
+	case 1: cout << "enter new save path : "; cin >> savePath; break;
+	case 2: cout << "enter new load path : "; cin >> loadPath; break;
+	case 3: return; break;
+	}
 }
 
 
