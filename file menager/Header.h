@@ -11,6 +11,24 @@
 using namespace std;
 namespace fs = std::filesystem;
 
+string check_name(vector<file>& file_list, string name) {
+	bool name_exists = true;
+	int suffix = 0;
+
+	while (name_exists) {
+		name_exists = false;
+		for (file f : file_list) {
+			if (f.name == name) {
+				name_exists = true;
+				suffix++;
+				name = name + "_" + to_string(suffix);
+				break;
+			}
+		}
+	}
+	return name;
+}
+
 void add_file(vector<file>& file_list) {
 
 	string new_name = "file" + to_string(1 + file_list.size());
@@ -98,41 +116,28 @@ void open_file(vector<file>& file_list) {
 	}
 }
 
-void load_files(vector<file>& file_list) {
-
-}
-
-void save_files(vector<file>& file_list) {
-	
-	ofstream* file;
-	string folderPath = "C:/Users/pawel/source/repos/Lernign/file menager/file menager/saved_files";
-
-	fs::create_directory(folderPath);
-
-	for (int i = 0; i < file_list.size(); i++) {
-
-		file = new ofstream;
-
-		file->open(folderPath+"/"+ file_list[i].name + ".txt");
-
-		if (file->is_open()) { 
-			*file << file_list[i].data;
-			file->close();
-			std::cout << "File saved successfully." << std::endl;
-			Sleep(200);
+void load_files(const std::string& folderPath, std::vector<file>& file_list) {
+	try {
+		for (const auto& entry : fs::directory_iterator(folderPath)) {
+			if (entry.is_regular_file()) {
+				std::ifstream file(entry.path());
+				if (file.is_open()) {
+					file_list.emplace_back();
+					file_list.back().name = check_name(file_list, entry.path().stem().string());
+					file_list.back().data = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+					file.close();
+				}
+			}
 		}
-		else {
-			std::cout << "Failed to open the file." << std::endl;
-			Sleep(600);
-		}
-
-		delete file;
 	}
-	Sleep(400);
+	catch (const std::exception& ex) {
+		std::cout << "Error: " << ex.what() << std::endl;
+	}
+	Sleep(500);
 	system("cls");
 }
 
-void save_filesv2(vector<file>& file_list) {
+void save_files(vector<file>& file_list) {
 	string diskPath;
 
 #ifdef _WIN32

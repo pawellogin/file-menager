@@ -34,8 +34,8 @@ int main() {
 		case 1: add_file(file_list); break;
 		case 2: delete_file(file_list); break;
 		case 3: open_file(file_list); break;
-		case 4: //load_files(file_list); break;
-		case 5: save_filesv2(file_list); break;
+		case 4: load_files("C:\\files_to_load",file_list); break;
+		case 5: save_files(file_list); break;
 		case 6: return 0; break;
 		default: cout << "chose the correct option";
 		system("cls");
