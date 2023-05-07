@@ -108,7 +108,6 @@ void open_file(vector<file>& file_list) {
 	case 2:(*it).edit_data(); break;
 	case 3:
 		if (it != file_list.end()) {
-		delete &it;
 		file_list.erase(it);
 		system("cls");
 	} break;
